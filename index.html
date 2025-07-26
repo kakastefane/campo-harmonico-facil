@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Campo Harmônico Fácil por Kaká Stefane</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <!-- Web App Manifest -->
+  <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiQ2FtcG8gSGFybcO0bmljbyBGw6FjaWwiLCJzaG9ydF9uYW1lIjoiSGFybW9uaWEiLCJpY29ucyI6W3sic3JjIjoiaHR0cHM6Ly9wbGFjZWhvbGQuY28vMTkyeDE5Mi8zYjgyZjYvZmZmZmZmP3RleHQ98J+NgiIsInNpemVzIjoiMTkyeDE5MiIsInR5cGUiOiJpbWFnZS9wbmciLCJwdXJwb3NlIjoiYW55IG1hc2thYmxlIn0seyJzcmMiOiJodHRwczovL3BsYWNlaG9sZC5jby81MTJ4NTEyLzNiODJmNi9mZmZmZmY/dGV4dD3wn42CIiwic2l6ZXMiOiI1MTJ4NTEyIiwidHlwZSI6ImltYWdlL3BuZyIsInB1cnBvc2UiOiJhbnkgbWFza2FibGUifV0sInRoZW1lX2NvbG9yIjoiIzNiODJmNiIsImJhY2tncm91bmRfY29sb3IiOiIjMTExYTI1IiwiZGlzcGxheSI6InN0YW5kYWxvbmUiLCJzY29wZSI6Ii4iLCJzdGFydF91cmwiOiIuIn0=">
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Custom styles for a subtle background pattern */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: radial-gradient(circle, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+      background-size: 20px 20px;
+      opacity: 0.5;
+      z-index: -1;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-900 text-white antialiased">
+
+  <div id="app" class="min-h-screen container mx-auto p-4 sm:p-6 lg:p-8 flex flex-col">
+
+    <!-- Header -->
+    <header class="text-center mb-8">
+      <h1 class="text-4xl sm:text-5xl font-bold text-blue-400">Campo Harmônico</h1>
+      <p class="text-gray-400 mt-2">Selecione um tom e veja a mágica acontecer.</p>
+    </header>
+
+    <!-- Controls -->
+    <div
+      class="bg-gray-800/50 backdrop-blur-sm rounded-xl p-4 sm:p-6 mb-8 sticky top-4 z-10 shadow-lg border border-gray-700">
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <!-- Semitone Down Button -->
+        <button id="semitone-down"
+          class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 transition-all duration-200 text-white font-bold py-3 px-5 rounded-lg flex items-center justify-center shadow-md">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+            <path fill-rule="evenodd"
+              d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"
+              transform="rotate(45 8 8)" />
+          </svg>
+          <span class="ml-2">Bemol (♭)</span>
+        </button>
+
+        <!-- Key Selector -->
+        <select id="key-selector"
+          class="w-full sm:w-64 bg-gray-700 border-2 border-gray-600 text-white text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-3 appearance-none text-center font-bold">
+          <!-- Options will be populated by JS -->
+        </select>
+
+        <!-- Semitone Up Button -->
+        <button id="semitone-up"
+          class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 transition-all duration-200 text-white font-bold py-3 px-5 rounded-lg flex items-center justify-center shadow-md">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+            <path
+              d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+          </svg>
+          <span class="ml-2">Sustenido (♯)</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Current Key Display -->
+    <div class="text-center mb-8">
+      <h2 class="text-2xl text-gray-400">Campo Harmônico de</h2>
+      <p id="current-key-display" class="text-6xl sm:text-7xl font-bold text-blue-400 transition-all"></p>
+    </div>
+
+    <!-- Harmonic Field Grid -->
+    <main id="harmonic-field-grid"
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-7 gap-4 sm:gap-6 flex-grow">
+      <!-- Cards will be populated by JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center mt-12 text-gray-500 text-sm">
+      <p>Criado com ❤️ para músicos por <a href="https://instagram.com/kakastefane" target="_blank">Kaká Stefane</a>.
+      </p>
+    </footer>
+
+  </div>
+
+  <script src="./main.js"></script>
+</body>
+
+</html>
